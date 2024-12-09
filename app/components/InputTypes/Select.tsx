@@ -25,7 +25,7 @@ export default function Select({ input }: { input: Input }) {
 
 	useEffect(() => {
 		handleUpdateInputs(input_info.options);
-	}, [input_info.options, handleUpdateInputs]);
+	}, [input_info.options]);
 
 	const removeOption = useCallback(
 		(option: Option) => {

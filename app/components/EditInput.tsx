@@ -14,11 +14,11 @@ const icons: { [key: string]: React.ElementType } = {
 	url: LinkURL,
 	date: Calendar,
 };
-const renderIcon = useCallback((type: string) => {
+const renderIcon = (type: string) => {
 	const Icon = icons[type];
 	if (!Icon) return null;
 	return <Icon width={20} height={20} />;
-}, []);
+};
 
 function EditInput({ id, input }: { id: string; input: Input }) {
 	const { updateInput } = useInputs();

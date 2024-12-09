@@ -1,13 +1,7 @@
 "use client";
 import { PlusIcon } from "lucide-react";
 import Button from "./Button";
-import React, {
-	useEffect,
-	useRef,
-	useState,
-	useCallback,
-	useMemo,
-} from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import ShortAnswer from "../icons/ShortAnswer";
 import LongAnswer from "../icons/LongAnswer";
 import SingleSelect from "../icons/SingleSelect";
@@ -15,36 +9,33 @@ import LinkURL from "../icons/Calendar";
 import Calendar from "../icons/LinkURL";
 import { useInputs } from "../providers/InputProvider";
 
-const inputTypes = useMemo(
-	() => [
-		{
-			name: "Short Answer",
-			type: "text",
-			icon: ShortAnswer,
-		},
-		{
-			name: "Long Answer",
-			type: "textarea",
-			icon: LongAnswer,
-		},
-		{
-			name: "Single Select",
-			type: "select",
-			icon: SingleSelect,
-		},
-		{
-			name: "Link",
-			type: "url",
-			icon: Calendar,
-		},
-		{
-			name: "Date",
-			type: "date",
-			icon: LinkURL,
-		},
-	],
-	[]
-);
+const inputTypes = [
+	{
+		name: "Short Answer",
+		type: "text",
+		icon: ShortAnswer,
+	},
+	{
+		name: "Long Answer",
+		type: "textarea",
+		icon: LongAnswer,
+	},
+	{
+		name: "Single Select",
+		type: "select",
+		icon: SingleSelect,
+	},
+	{
+		name: "Link",
+		type: "url",
+		icon: Calendar,
+	},
+	{
+		name: "Date",
+		type: "date",
+		icon: LinkURL,
+	},
+];
 
 export default function AddQuestion() {
 	const { addInput } = useInputs();
