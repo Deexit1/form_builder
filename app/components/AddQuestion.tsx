@@ -1,7 +1,13 @@
 "use client";
 import { PlusIcon } from "lucide-react";
 import Button from "./Button";
-import { useEffect, useRef, useState } from "react";
+import React, {
+	useEffect,
+	useRef,
+	useState,
+	useCallback,
+	useMemo,
+} from "react";
 import ShortAnswer from "../icons/ShortAnswer";
 import LongAnswer from "../icons/LongAnswer";
 import SingleSelect from "../icons/SingleSelect";
@@ -9,62 +15,66 @@ import LinkURL from "../icons/Calendar";
 import Calendar from "../icons/LinkURL";
 import { useInputs } from "../providers/InputProvider";
 
-const inputTypes = [
-	{
-		name: "Short Answer",
-		type: "text",
-		icon: ShortAnswer,
-	},
-	{
-		name: "Long Answer",
-		type: "textarea",
-		icon: LongAnswer,
-	},
-	{
-		name: "Single Select",
-		type: "select",
-		icon: SingleSelect,
-	},
-	{
-		name: "Link",
-		type: "url",
-		icon: Calendar,
-	},
-	{
-		name: "Date",
-		type: "date",
-		icon: LinkURL,
-	},
-];
+const inputTypes = useMemo(
+	() => [
+		{
+			name: "Short Answer",
+			type: "text",
+			icon: ShortAnswer,
+		},
+		{
+			name: "Long Answer",
+			type: "textarea",
+			icon: LongAnswer,
+		},
+		{
+			name: "Single Select",
+			type: "select",
+			icon: SingleSelect,
+		},
+		{
+			name: "Link",
+			type: "url",
+			icon: Calendar,
+		},
+		{
+			name: "Date",
+			type: "date",
+			icon: LinkURL,
+		},
+	],
+	[]
+);
+
 export default function AddQuestion() {
 	const { addInput } = useInputs();
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const handleClickOutside = (event: MouseEvent) => {
+	const handleClickOutside = useCallback((event: MouseEvent) => {
 		if (
 			dropdownRef.current &&
 			!dropdownRef.current.contains(event.target as Node)
 		) {
 			setIsOpen(false);
 		}
-	};
+	}, []);
 
-	const handleEsacpe = (event: KeyboardEvent) => {
+	const handleEscape = useCallback((event: KeyboardEvent) => {
 		if (event.key === "Escape") {
 			setIsOpen(false);
 		}
-	};
+	}, []);
 
 	useEffect(() => {
 		document.addEventListener("mousedown", handleClickOutside);
-		document.addEventListener("keydown", handleEsacpe);
+		document.addEventListener("keydown", handleEscape);
 
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
-			document.removeEventListener("keydown", handleEsacpe);
+			document.removeEventListener("keydown", handleEscape);
 		};
-	}, []);
+	}, [handleClickOutside, handleEscape]);
 
 	return (
 		<div className="relative" ref={dropdownRef}>

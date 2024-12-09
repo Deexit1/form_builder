@@ -1,7 +1,6 @@
-import Calendar from "@/app/icons/Calendar";
 import React from "react";
 
-export default function Date({
+const Date = React.memo(function Date({
 	value,
 	onChange,
 	placeholder,
@@ -27,9 +26,8 @@ export default function Date({
 				className="w-full outline-none text-normal text-textBlack border border-borderGray p-2 rounded-sm shadow-sm bg-gray"
 				{...props}
 			/>
-			{/* <div className="absolute right-2 top-2.5">
-				<Calendar width={20} height={20} />
-			</div> */}
 		</div>
 	);
-}
+});
+
+export default Date;

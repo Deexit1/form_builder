@@ -4,7 +4,7 @@ import LinkURL from "../icons/LinkURL";
 import LongAnswer from "../icons/LongAnswer";
 import ShortAnswer from "../icons/ShortAnswer";
 import SingleSelect from "../icons/SingleSelect";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Input, useInputs } from "../providers/InputProvider";
 
 const icons: { [key: string]: React.ElementType } = {
@@ -14,22 +14,25 @@ const icons: { [key: string]: React.ElementType } = {
 	url: LinkURL,
 	date: Calendar,
 };
-const renderIcon = (type: string) => {
+const renderIcon = useCallback((type: string) => {
 	const Icon = icons[type];
 	if (!Icon) return null;
 	return <Icon width={20} height={20} />;
-};
+}, []);
 
 function EditInput({ id, input }: { id: string; input: Input }) {
 	const { updateInput } = useInputs();
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const editInput = (type: string) => {
-		const newInput = { ...input };
-		newInput.type = type;
-		updateInput(id, newInput);
-	};
+	const editInput = useCallback(
+		(type: string) => {
+			const newInput = { ...input };
+			newInput.type = type;
+			updateInput(id, newInput);
+		},
+		[id, input, updateInput]
+	);
 
 	const handleClickOutside = (event: MouseEvent) => {
 		if (

@@ -25,7 +25,7 @@ interface ButtonProps
 	prefixIcon?: React.ReactNode;
 }
 
-export default function Button({
+const Button = React.memo(function Button({
 	disabled,
 	variant,
 	className,
@@ -49,4 +49,6 @@ export default function Button({
 			{suffixIcon && suffixIcon}
 		</button>
 	);
-}
+});
+
+export default Button;

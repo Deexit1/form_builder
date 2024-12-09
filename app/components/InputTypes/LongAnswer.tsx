@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function LongAnswer({
+const LongAnswer = React.memo(function LongAnswer({
 	value,
 	onChange,
 	placeholder,
@@ -26,4 +26,6 @@ export default function LongAnswer({
 			{...props}
 		/>
 	);
-}
+});
+
+export default LongAnswer;

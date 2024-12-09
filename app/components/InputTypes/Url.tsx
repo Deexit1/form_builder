@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Url({
+const Url = React.memo(function Url({
 	value,
 	onChange,
 	placeholder,
@@ -26,4 +26,6 @@ export default function Url({
 			{...props}
 		/>
 	);
-}
+});
+
+export default Url;

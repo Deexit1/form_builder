@@ -1,4 +1,5 @@
 "use client";
+import React, { useCallback } from "react";
 import { GripVertical, Trash } from "lucide-react";
 import ShortAnswer from "./InputTypes/ShortAnswer";
 import LongAnswer from "./InputTypes/LongAnswer";
@@ -8,7 +9,7 @@ import Date from "./InputTypes/Date";
 import EditInput from "./EditInput";
 import { Input, useInputs } from "../providers/InputProvider";
 
-export default function EditorInput({
+const EditorInput = React.memo(function EditorInput({
 	input,
 	...props
 }: {
@@ -16,7 +17,8 @@ export default function EditorInput({
 	props?: React.InputHTMLAttributes<HTMLInputElement>;
 }) {
 	const { removeInput, updateInput } = useInputs();
-	const renderInput = () => {
+
+	const renderInput = useCallback(() => {
 		const inputTypes: { [key: string]: React.ElementType } = {
 			text: ShortAnswer,
 			textarea: LongAnswer,
@@ -27,23 +29,29 @@ export default function EditorInput({
 		const Component = inputTypes[input.type];
 		if (!Component) return null;
 		return <Component disabled input={input} />;
-	};
+	}, [input]);
 
-	const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const newInput = { ...input };
-		newInput.question = e.target.value;
-		updateInput(input.id, newInput);
-	};
+	const handleQuestionChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			const newInput = { ...input };
+			newInput.question = e.target.value;
+			updateInput(input.id, newInput);
+		},
+		[input, updateInput]
+	);
 
-	const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const newInput = { ...input };
-		newInput.description = e.target.value;
-		updateInput(input.id, newInput);
-	};
+	const handleDescriptionChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			const newInput = { ...input };
+			newInput.description = e.target.value;
+			updateInput(input.id, newInput);
+		},
+		[input, updateInput]
+	);
 
-	const handleRemoveInput = () => {
+	const handleRemoveInput = useCallback(() => {
 		removeInput(input.id);
-	};
+	}, [input.id, removeInput]);
 
 	return (
 		<div className="border border-borderGray p-4 rounded-lg focus-within:shadow-sm transition duration-150 ease-linear hover:bg-backgroundGray w-full">
@@ -55,7 +63,7 @@ export default function EditorInput({
 							placeholder="Write a question here"
 							className="w-full outline-none text-normal text-textBlack bg-transparent"
 							value={input.question}
-							onChange={(e) => handleQuestionChange(e)}
+							onChange={handleQuestionChange}
 							{...props}
 						/>
 					</label>
@@ -64,7 +72,7 @@ export default function EditorInput({
 						placeholder="Write a description here"
 						className="w-full outline-none text-small text-textBlack bg-transparent"
 						value={input.description}
-						onChange={(e) => handleDescriptionChange(e)}
+						onChange={handleDescriptionChange}
 						{...props}
 					/>
 				</div>
@@ -82,4 +90,6 @@ export default function EditorInput({
 			{renderInput()}
 		</div>
 	);
-}
+});
+
+export default EditorInput;

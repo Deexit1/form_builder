@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+	createContext,
+	useContext,
+	useState,
+	ReactNode,
+	useCallback,
+} from "react";
 import { uuid } from "uuidv4";
 
 export interface Option {
@@ -30,7 +36,7 @@ export const InputsProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
 	const [inputs, setInputs] = useState<Input[]>([]);
 
-	const addInput = (type: string) => {
+	const addInput = useCallback((type: string) => {
 		const newInput = {
 			id: uuid(),
 			type: type,
@@ -40,19 +46,22 @@ export const InputsProvider: React.FC<{ children: ReactNode }> = ({
 			value: "",
 		};
 		setInputs((prevInputs) => [...prevInputs, newInput]);
-	};
+	}, []);
 
-	const updateInput = (id: string, updatedInput: Partial<Input>) => {
-		setInputs((prevInputs) =>
-			prevInputs.map((input) =>
-				input.id === id ? { ...input, ...updatedInput } : input
-			)
-		);
-	};
+	const updateInput = useCallback(
+		(id: string, updatedInput: Partial<Input>) => {
+			setInputs((prevInputs) =>
+				prevInputs.map((input) =>
+					input.id === id ? { ...input, ...updatedInput } : input
+				)
+			);
+		},
+		[]
+	);
 
-	const removeInput = (id: string) => {
+	const removeInput = useCallback((id: string) => {
 		setInputs((prevInputs) => prevInputs.filter((input) => input.id !== id));
-	};
+	}, []);
 
 	return (
 		<InputsContext.Provider

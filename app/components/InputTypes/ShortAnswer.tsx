@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ShortAnswer({
+const ShortAnswer = React.memo(function ShortAnswer({
 	value,
 	onChange,
 	placeholder,
@@ -26,4 +26,6 @@ export default function ShortAnswer({
 			{...props}
 		/>
 	);
-}
+});
+
+export default ShortAnswer;

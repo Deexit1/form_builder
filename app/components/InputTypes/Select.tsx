@@ -1,38 +1,46 @@
 import { Input, Option, useInputs } from "@/app/providers/InputProvider";
-import { Circle, Minus, Plus } from "lucide-react";
+import { Circle, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { uuid } from "uuidv4";
+
+import { useCallback, useMemo } from "react";
 
 export default function Select({ input }: { input: Input }) {
 	const { setInputs, inputs } = useInputs();
 
 	// find the correct input from inputs array
 	const inputIndex = inputs.findIndex((i) => i.id === input.id);
-	const input_info = inputs[inputIndex];
+	const input_info = useMemo(() => inputs[inputIndex], [inputs, inputIndex]);
 
-	const handleUpdateInputs = (newOptions: Option[]) => {
-		const newInput = { ...input_info };
-		newInput.options = newOptions;
-		setInputs((prevInputs) =>
-			prevInputs.map((i) => (i.id === input_info.id ? newInput : i))
-		);
-	};
+	const handleUpdateInputs = useCallback(
+		(newOptions: Option[]) => {
+			const newInput = { ...input_info };
+			newInput.options = newOptions;
+			setInputs((prevInputs) =>
+				prevInputs.map((i) => (i.id === input_info.id ? newInput : i))
+			);
+		},
+		[input_info, setInputs]
+	);
 
 	useEffect(() => {
 		handleUpdateInputs(input_info.options);
-	}, [input_info.options]);
+	}, [input_info.options, handleUpdateInputs]);
 
-	const removeOption = (option: Option) => {
-		const newOptions = [...input_info.options];
-		const index = newOptions.findIndex((o) => o.id === option.id);
-		if (index > -1) {
-			newOptions.splice(index, 1);
-		}
-		if (newOptions.length === 0) {
-			newOptions.push({ id: uuid(), value: "" });
-		}
-		handleUpdateInputs(newOptions);
-	};
+	const removeOption = useCallback(
+		(option: Option) => {
+			const newOptions = [...input_info.options];
+			const index = newOptions.findIndex((o) => o.id === option.id);
+			if (index > -1) {
+				newOptions.splice(index, 1);
+			}
+			if (newOptions.length === 0) {
+				newOptions.push({ id: uuid(), value: "" });
+			}
+			handleUpdateInputs(newOptions);
+		},
+		[input_info.options, handleUpdateInputs]
+	);
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -55,7 +63,6 @@ function OptionComponent({
 	isLast,
 	setOptions,
 	options,
-	removeOption,
 }: {
 	option: Option;
 	isLast?: boolean;
@@ -63,10 +70,7 @@ function OptionComponent({
 	options: Option[];
 	removeOption: () => void;
 }) {
-	const [input, setInput] = useState({
-		id: uuid(),
-		value: "",
-	});
+	const [input, setInput] = useState(option);
 	const addOption = () => {
 		if (input.value.trim().length === 0) return;
 		const newOptions = [...options];

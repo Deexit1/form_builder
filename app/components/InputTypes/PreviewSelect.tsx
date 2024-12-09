@@ -1,11 +1,10 @@
 import { Option } from "@/app/providers/InputProvider";
-import React from "react";
+import React, { useCallback } from "react";
 
-export default function PreviewSelect({
+const PreviewSelect = React.memo(function PreviewSelect({
 	value,
 	onChange,
 	options,
-	...props
 }: {
 	value: string | number;
 	onChange: (
@@ -14,6 +13,13 @@ export default function PreviewSelect({
 	options?: Option[];
 	props?: React.InputHTMLAttributes<HTMLInputElement>;
 }) {
+	const handleChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+			onChange(e);
+		},
+		[onChange]
+	);
+
 	return (
 		<div className="flex flex-col gap-1">
 			{options?.map((option, index) => (
@@ -27,7 +33,7 @@ export default function PreviewSelect({
 							id={`option${index}`}
 							name="options"
 							value={option.value}
-							onChange={onChange}
+							onChange={handleChange}
 							className="relative w-5 h-5 rounded-full appearance-none cursor-pointer border-2 border-borderGray checked:border-primary peer"
 							checked={value === option.value}
 						/>
@@ -40,4 +46,6 @@ export default function PreviewSelect({
 			))}
 		</div>
 	);
-}
+});
+
+export default PreviewSelect;

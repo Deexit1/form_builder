@@ -1,11 +1,11 @@
 "use client";
-import React, { ChangeEvent, ChangeEventHandler } from "react";
+import React, { ChangeEventHandler, useCallback } from "react";
 import { ArrowUpRight } from "lucide-react";
 import Button from "./Button";
 import Progress from "./Progress";
 import { useInputs } from "../providers/InputProvider";
 
-export default function Header({
+const Header = React.memo(function Header({
 	header,
 	isPreview,
 	handleHeader,
@@ -17,6 +17,11 @@ export default function Header({
 	setPreview: (value: boolean) => void;
 }) {
 	const { inputs } = useInputs();
+
+	const handleSetPreview = useCallback(() => {
+		setPreview(!isPreview);
+	}, [isPreview, setPreview]);
+
 	return (
 		<div className="sticky top-0 w-full p-3 border-y border-borderGray font-bold flex items-center justify-between gap-2 h-[8vh] lg:h-[6vh]">
 			{isPreview ? (
@@ -34,9 +39,7 @@ export default function Header({
 				<Button
 					variant={inputs.length === 0 ? "disabled" : "outline"}
 					suffixIcon={<ArrowUpRight className="w-5 h-5" />}
-					onClick={() => {
-						setPreview(!isPreview);
-					}}
+					onClick={handleSetPreview}
 				>
 					{isPreview ? "Edit" : "Preview"}
 				</Button>
@@ -44,4 +47,6 @@ export default function Header({
 			</div>
 		</div>
 	);
-}
+});
+
+export default Header;
