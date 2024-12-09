@@ -1,16 +1,13 @@
 import { Input } from "../providers/InputProvider";
-import { useMemo } from "react";
 
 export default function Progress({ inputs }: { inputs: Input[] }) {
-	const values = useMemo(() => inputs.map((input) => input["value"]), [inputs]);
+	const values = inputs.map((input) => input["value"]);
 
-	const progress = useMemo(() => {
-		return (
-			(values.filter((value) => value?.toString().trim() !== "").length /
-				values.length) *
+	const progress = Math.round(
+		(values.filter((value) => value?.toString().trim() !== "").length /
+			values.length) *
 			100
-		);
-	}, [values]);
+	);
 
 	return (
 		<div className="flex flex-col gap-1 justify-between items-center">

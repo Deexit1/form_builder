@@ -8,9 +8,7 @@ import { Input, useInputs } from "../providers/InputProvider";
 
 const PreviewInput: React.FC<{
 	input: Input;
-	errors: { id: string; message: string }[];
-	setErrors: (errors: { id: string; message: string }[]) => void;
-}> = ({ input, errors, setErrors }) => {
+}> = ({ input }) => {
 	const { updateInput } = useInputs();
 
 	const handleValueChange = useCallback(
@@ -20,23 +18,6 @@ const PreviewInput: React.FC<{
 		},
 		[input, updateInput]
 	);
-
-	if (input.type === "url") {
-		if (input.value) {
-			const url = new URL(input.value.toString());
-			if (url.protocol !== "http:" && url.protocol !== "https:") {
-				setErrors([...errors, { id: input.id, message: "Invalid URL" }]);
-			} else {
-				setErrors(errors.filter((error) => error.id !== input.id));
-			}
-		}
-	}
-
-	const error = useMemo(
-		() => errors.find((err) => err.id === input.id),
-		[errors, input.id]
-	);
-
 	const renderInput = useCallback(() => {
 		const inputTypes: { [key: string]: React.ElementType } = {
 			text: ShortAnswer,
@@ -58,11 +39,7 @@ const PreviewInput: React.FC<{
 
 	return (
 		<div className="flex flex-col justify-between gap-1 w-full">
-			<label
-				className={`text-normal text-textBlack font-bold ${
-					error ? "text-red-500" : "text-textBlack"
-				}`}
-			>
+			<label className={`text-normal text-textBlack font-bold`}>
 				{input.question}
 			</label>
 			<p className="text-small text-textBlack">{input.description}</p>
