@@ -1,6 +1,6 @@
 "use client";
 import Header from "./components/Header";
-import Button from "./components/Button";
+import Button from "./components/button";
 import { Check } from "lucide-react";
 import AddQuestion from "./components/AddQuestion";
 import React, { ChangeEvent, useState, useCallback } from "react";

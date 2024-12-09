@@ -1,7 +1,7 @@
 "use client";
 import React, { ChangeEventHandler, useCallback } from "react";
 import { ArrowUpRight } from "lucide-react";
-import Button from "./Button";
+import Button from "./button";
 import Progress from "./Progress";
 import { useInputs } from "../providers/InputProvider";
 
