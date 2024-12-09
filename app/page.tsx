@@ -19,7 +19,6 @@ export default function Home() {
 	const { inputs } = useInputs();
 	const [isPreview, setPreview] = useState<boolean>(false);
 	const [formName, setFormName] = useState<string>("");
-	const [errors, setErrors] = useState<{ id: string; message: string }[]>([]);
 
 	const handleHeader = useCallback((e: ChangeEvent<HTMLInputElement>) => {
 		setFormName(e.target.value);
@@ -94,11 +93,7 @@ export default function Home() {
 			<div className="p-4 flex flex-col gap-5 items-center">
 				{inputs.map((input, index) => (
 					<div key={index} className="w-full flex gap-2">
-						<MemoizedPreviewInput
-							input={input}
-							errors={errors}
-							setErrors={setErrors}
-						/>
+						<MemoizedPreviewInput input={input} />
 					</div>
 				))}
 				<div className="w-full flex justify-end">
