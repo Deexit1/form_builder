@@ -16,4 +16,4 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result OR You can see
 
-#### [The Live Demo](https://form_builder.vercel.app)
+#### [The Live Demo](https://form-builder-six-dusky.vercel.app/)
