@@ -40,6 +40,7 @@ const Header = React.memo(function Header({
 					variant={inputs.length === 0 ? "disabled" : "outline"}
 					suffixIcon={<ArrowUpRight className="w-5 h-5" />}
 					onClick={handleSetPreview}
+					disabled={inputs.length === 0}
 				>
 					{isPreview ? "Edit" : "Preview"}
 				</Button>
