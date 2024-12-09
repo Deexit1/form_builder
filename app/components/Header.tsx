@@ -23,7 +23,7 @@ const Header = React.memo(function Header({
 	}, [isPreview, setPreview]);
 
 	return (
-		<div className="sticky top-0 w-full p-3 border-y border-borderGray font-bold flex items-center justify-between gap-2 h-[8vh] lg:h-[6vh]">
+		<div className="sticky top-0 w-full p-3 border-y border-borderGray font-bold flex items-center justify-between gap-2 h-[8vh] lg:h-[6vh] bg-white">
 			{isPreview ? (
 				<p className="text-md w-1/2 overflow-hidden text-ellipsis">{header}</p>
 			) : (

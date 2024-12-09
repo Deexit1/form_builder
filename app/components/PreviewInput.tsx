@@ -1,4 +1,4 @@
-import React, { useCallback, memo, useMemo } from "react";
+import React, { useCallback, memo } from "react";
 import ShortAnswer from "./InputTypes/ShortAnswer";
 import LongAnswer from "./InputTypes/LongAnswer";
 import Url from "./InputTypes/Url";
