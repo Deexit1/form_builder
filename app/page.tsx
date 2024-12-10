@@ -1,113 +1,43 @@
-"use client";
-import Header from "./components/Header";
+import { readData } from "./api/utils";
 import Button from "./components/button";
-import { Check } from "lucide-react";
-import AddQuestion from "./components/AddQuestion";
-import React, { ChangeEvent, useState, useCallback } from "react";
-import Draft from "./icons/Draft";
-import EditorInput from "./components/EditorInput";
-import PreviewInput from "./components/PreviewInput";
-import { toast } from "sonner";
-import { useInputs } from "./providers/InputProvider";
+import List from "./components/List";
+import { Form } from "./providers/InputProvider";
+import Link from "next/link";
 
-const MemoizedHeader = React.memo(Header);
-const MemoizedEditorInput = React.memo(EditorInput);
-const MemoizedPreviewInput = React.memo(PreviewInput);
-const MemoizedAddQuestion = React.memo(AddQuestion);
-
-export default function Home() {
-	const { inputs } = useInputs();
-	const [isPreview, setPreview] = useState<boolean>(false);
-	const [formName, setFormName] = useState<string>("");
-
-	const handleHeader = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-		setFormName(e.target.value);
-	}, []);
-
-	const handleSaveDraft = useCallback(() => {
-		console.log("Form submitted");
-	}, []);
-
-	const handlePublishForm = useCallback(() => {
-		setPreview(true);
-	}, []);
-
-	const handleFormSubmit = useCallback(() => {
-		toast.success("Form Submitted", {
-			className: "text-borderPrimary",
-			position: "bottom-center",
-			closeButton: true,
-		});
-	}, []);
-
-	if (!isPreview)
-		return (
-			<>
-				<MemoizedHeader
-					header={formName}
-					handleHeader={handleHeader}
-					isPreview={isPreview}
-					setPreview={setPreview}
-				/>
-				<div className="p-4 flex flex-col gap-5 items-center h-[85vh] overflow-y-auto">
-					{inputs.map((input) => (
-						<MemoizedEditorInput key={input.id} input={input} />
-					))}
-					<MemoizedAddQuestion />
-				</div>
-				<div className="absolute bottom-0 flex justify-between items-center px-4 py-6 w-full bg-backgroundGray border-t border-borderGray h-[8vh]">
-					<Button
-						variant={inputs.length === 0 ? "disabled" : "outline"}
-						onClick={handleSaveDraft}
-						prefixIcon={
-							<Draft
-								width={16}
-								height={16}
-								color={inputs.length === 0 ? "#959DA5" : "#0D0D0D"}
-							/>
-						}
-						disabled={inputs.length === 0}
-					>
-						Save as Draft
-					</Button>
-					<Button
-						variant={"default"}
-						onClick={handlePublishForm}
-						prefixIcon={<Check size={16} />}
-						disabled={inputs.length === 0}
-					>
-						Publish Form
-					</Button>
-				</div>
-			</>
-		);
+export default async function Home() {
+	// Server actions (no need to call the api, you can directly search in the db)
+	// HERE WE SHOULD CALL THE API TO GET THE FORMS, BUT AS I'M NOT USING A DATABASE, I'LL JUST RETURN A MOCKED DATA
+	// WHICH WILL CAUSE NOT REFRESHING THE DATA WHEN A NEW FORM IS CREATED BECAUSE OF THE NEXTJS CACHE SYSTEM
+	const res = await readData();
+	const forms = res.forms;
 
 	return (
 		<>
-			<MemoizedHeader
-				header={formName}
-				isPreview={isPreview}
-				setPreview={setPreview}
-				handleHeader={handleHeader}
-			/>
-			<div className="p-4 flex flex-col gap-5 items-center">
-				{inputs.map((input, index) => (
-					<div key={index} className="w-full flex gap-2">
-						<MemoizedPreviewInput input={input} />
-					</div>
-				))}
-				<div className="w-full flex justify-end">
-					<Button
-						variant="default"
-						disabled={inputs.some(
-							(input) => input.value?.toString().trim() === ""
-						)}
-						onClick={handleFormSubmit}
-					>
-						Submit
-					</Button>
-				</div>
+			<div className="sticky top-0 w-full p-3 border-y border-borderGray font-bold flex items-center justify-between gap-2 h-[8vh] lg:h-[6vh] bg-white">
+				<h1>Form Builder</h1>
+				<Link
+					href="/form"
+					className="flex items-center gap-1 text-small border rounded-md py-1 px-4 w-fit font-bold hover:shadow-sm text-textBlack border-borderGray bg-white"
+				>
+					Create Form
+				</Link>
 			</div>
+			{forms.length > 0 ? (
+				<div>
+					<p className="p-4 text-large font-bold">Your Forms</p>
+					{forms.map((form: Form) => (
+						<List key={form.formId} form={form} />
+					))}
+				</div>
+			) : (
+				<div className="p-4 flex flex-col gap-5 items-center h-[85vh] overflow-y-auto justify-center">
+					<p className="text-lg font-bold">Welcome to Form Builder</p>
+					<p className="text-md text-center">
+						Click on the button below to start creating your form
+					</p>
+					<Button>Create Form</Button>
+				</div>
+			)}
 		</>
 	);
 }
