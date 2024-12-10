@@ -21,6 +21,13 @@ export interface Input {
 	value?: string | number;
 }
 
+export interface Form {
+	formId: string;
+	name: string;
+	isDraft: boolean;
+	inputs: Input[];
+}
+
 interface InputsContextType {
 	inputs: Input[];
 	setInputs: React.Dispatch<React.SetStateAction<Input[]>>;
