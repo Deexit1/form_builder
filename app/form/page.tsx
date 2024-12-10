@@ -1,6 +1,12 @@
 "use client";
 import { Check } from "lucide-react";
-import React, { ChangeEvent, useState, useCallback, useEffect } from "react";
+import React, {
+	ChangeEvent,
+	useState,
+	useCallback,
+	useEffect,
+	Suspense,
+} from "react";
 import { toast } from "sonner";
 import Header from "../components/Header";
 import EditorInput from "../components/EditorInput";
@@ -18,7 +24,7 @@ const MemoizedEditorInput = React.memo(EditorInput);
 const MemoizedPreviewInput = React.memo(PreviewInput);
 const MemoizedAddQuestion = React.memo(AddQuestion);
 
-export default function FormBuilder() {
+function FormBuilder() {
 	const { inputs, setInputs } = useInputs();
 	const params = useSearchParams();
 	const router = useRouter();
@@ -34,6 +40,7 @@ export default function FormBuilder() {
 				router.push("/not-found");
 			}
 		} catch (err) {
+			console.log("Error", err);
 			router.push("/not-found");
 		}
 	}, []);
@@ -53,20 +60,31 @@ export default function FormBuilder() {
 
 	const handleSaveDraft = useCallback(async () => {
 		try {
-			const data = {
-				formId: id,
-				isDraft: true,
-				formName: formName,
-				inputs: inputs,
-			};
-
-			const res = await axios.put(`/api/form/${id}`, data);
+			let res;
+			if (id) {
+				const data = {
+					formId: id,
+					isDraft: true,
+					formName: formName,
+					inputs: inputs,
+				};
+				res = await axios.put(`/api/form/${id}`, data);
+			} else {
+				const data = {
+					formId: uuid(),
+					isDraft: true,
+					formName: formName,
+					inputs: inputs,
+				};
+				res = await axios.post("/api/forms", data);
+			}
 			toast.success(`Form Submitted (${res.data.formId})`, {
 				className: "text-borderPrimary",
 				position: "bottom-center",
 				closeButton: true,
 			});
 		} catch (err) {
+			console.log("Error", err);
 			toast.error("Failed to submit form", {
 				className: "text-red-600",
 				position: "bottom-center",
@@ -77,16 +95,22 @@ export default function FormBuilder() {
 
 	const handlePublishForm = useCallback(async () => {
 		try {
-			const data = {
-				formId: id || uuid(),
-				isDraft: false,
-				formName: formName,
-				inputs: inputs,
-			};
 			let res;
 			if (id) {
+				const data = {
+					formId: id,
+					isDraft: false,
+					formName: formName,
+					inputs: inputs,
+				};
 				res = await axios.put(`/api/form/${id}`, data);
 			} else {
+				const data = {
+					formId: uuid(),
+					isDraft: false,
+					formName: formName,
+					inputs: inputs,
+				};
 				res = await axios.post("/api/forms", data);
 			}
 			setPreview(true);
@@ -96,6 +120,7 @@ export default function FormBuilder() {
 				closeButton: true,
 			});
 		} catch (err) {
+			console.log("Error", err);
 			toast.error("Failed to publish form", {
 				className: "text-red-600",
 				position: "bottom-center",
@@ -120,6 +145,7 @@ export default function FormBuilder() {
 				closeButton: true,
 			});
 		} catch (err) {
+			console.log("Error", err);
 			toast.error("Failed to submit form", {
 				className: "text-red-600",
 				position: "bottom-center",
@@ -197,5 +223,13 @@ export default function FormBuilder() {
 				</div>
 			</div>
 		</>
+	);
+}
+
+export default function Form() {
+	return (
+		<Suspense fallback={<div>Loading...</div>}>
+			<FormBuilder />
+		</Suspense>
 	);
 }

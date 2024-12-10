@@ -1,10 +1,9 @@
 import fs from "fs";
 import { NextResponse, NextRequest } from "next/server";
 import path from "path";
+import { readData } from "../../utils";
 
 const filePath = path.resolve(process.cwd(), "data.json");
-
-export const readData = () => JSON.parse(fs.readFileSync(filePath, "utf-8"));
 
 export async function GET(
 	req: NextRequest,
@@ -23,6 +22,7 @@ export async function GET(
 			return NextResponse.json({ message: "No form found" }, { status: 404 });
 		}
 	} catch (error) {
+		console.log("error", error);
 		return NextResponse.json(
 			{ error: "Failed to fetch the forms" },
 			{ status: 500 }
